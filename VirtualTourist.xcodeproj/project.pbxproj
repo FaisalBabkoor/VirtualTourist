@@ -18,6 +18,8 @@
 		14E581982398EC920070CA5B /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E581972398EC920070CA5B /* DataController.swift */; };
 		14E5819B2398EFB00070CA5B /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E5819A2398EFB00070CA5B /* Identifier.swift */; };
 		14E5819D2398EFBC0070CA5B /* ShowAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E5819C2398EFBC0070CA5B /* ShowAlert.swift */; };
+		14E5819F2398F3B00070CA5B /* PhotoAlbumViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E5819E2398F3B00070CA5B /* PhotoAlbumViewCell.swift */; };
+		14E581A22398F8660070CA5B /* Photo+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E581A12398F8660070CA5B /* Photo+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		14E581972398EC920070CA5B /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		14E5819A2398EFB00070CA5B /* Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifier.swift; sourceTree = "<group>"; };
 		14E5819C2398EFBC0070CA5B /* ShowAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowAlert.swift; sourceTree = "<group>"; };
+		14E5819E2398F3B00070CA5B /* PhotoAlbumViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewCell.swift; sourceTree = "<group>"; };
+		14E581A12398F8660070CA5B /* Photo+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +87,7 @@
 		1479A50B2398E8B400913146 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				14E5819E2398F3B00070CA5B /* PhotoAlbumViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -99,6 +104,7 @@
 		1479A50D2398E8C400913146 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				14E581A02398F8570070CA5B /* Managed Object Extensions */,
 				1479A4FD2398E73000913146 /* VirtualTourist.xcdatamodeld */,
 				14E581972398EC920070CA5B /* DataController.swift */,
 			);
@@ -112,6 +118,14 @@
 				14E5819C2398EFBC0070CA5B /* ShowAlert.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		14E581A02398F8570070CA5B /* Managed Object Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				14E581A12398F8660070CA5B /* Photo+Extensions.swift */,
+			);
+			path = "Managed Object Extensions";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,12 +200,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1479A4FF2398E73000913146 /* VirtualTourist.xcdatamodeld in Sources */,
+				14E5819F2398F3B00070CA5B /* PhotoAlbumViewCell.swift in Sources */,
 				14E581982398EC920070CA5B /* DataController.swift in Sources */,
 				1479A4F52398E73000913146 /* AppDelegate.swift in Sources */,
 				14E5819D2398EFBC0070CA5B /* ShowAlert.swift in Sources */,
 				14E5819B2398EFB00070CA5B /* Identifier.swift in Sources */,
 				1479A4F72398E73000913146 /* SceneDelegate.swift in Sources */,
 				1479A5112398E90100913146 /* PhotoAlbumViewController.swift in Sources */,
+				14E581A22398F8660070CA5B /* Photo+Extensions.swift in Sources */,
 				1479A50F2398E8E900913146 /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

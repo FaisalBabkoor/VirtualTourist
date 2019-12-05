@@ -17,7 +17,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
     var choosenLocation: MKCoordinateRegion!
     let distansInMeters: Double = 10000
     var fetchResult: NSFetchedResultsController<Pin>!
-    
+    var pinArray = [Pin]()
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
@@ -27,6 +27,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
     }
     func bringPins() {
         if let pins = fetchResult.fetchedObjects {
+            pinArray = pins
                for pin in pins {
                    let center = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
                    let pointAnnotation = MKPointAnnotation()
@@ -57,6 +58,9 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
             let newPin = Pin(context: DataController.shared.viewContext)
             newPin.latitude = center.latitude
             newPin.longitude = center.longitude
+            if !pinArray.contains(newPin){
+                pinArray.append(newPin)
+            }
             if DataController.shared.viewContext.hasChanges {
                 do {
                     try DataController.shared.viewContext.save()
@@ -91,7 +95,12 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Identifiers.SegueIdentifier.toPhotoAlbumVC {
             if let photoVC = segue.destination as? PhotoAlbumViewController {
-                print("HI")
+                guard let annotation = sender as? MKAnnotation else { return }
+                let filterPin = pinArray.filter{$0.latitude == annotation.coordinate.latitude && $0.longitude == annotation.coordinate.longitude}
+                guard let pin = filterPin.first else { return }
+                photoVC.pin = pin
+               
+                
             }
         }
     }
@@ -113,6 +122,6 @@ extension MapViewController: MKMapViewDelegate {
         return pinView
     }
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        performSegue(withIdentifier: Identifiers.SegueIdentifier.toPhotoAlbumVC, sender: nil)
+        performSegue(withIdentifier: Identifiers.SegueIdentifier.toPhotoAlbumVC, sender: view.annotation)
     }
 }
