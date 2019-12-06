@@ -7,15 +7,29 @@
 //
 
 import UIKit
+import CoreData
+import Kingfisher
 
 class PhotoAlbumViewCell: UICollectionViewCell {
     @IBOutlet var photoAlbum: UIImageView!
-    @IBOutlet var spinner: UIActivityIndicatorView!
+    var flickerImage: UIImage!
     func configureCell(photo: Photo) {
-//        spinner.isHidden = false
-//        spinner.startAnimating()
-//        guard let imageData = photo.image else { return }
-//        self.photoAlbum.image = UIImage(data: imageData)
-//        spinner.stopAnimating()
+        if let image = photo.getImage() {
+            photoAlbum.image = image
+        } else {
+
+            guard let photourl = photo.url else { return }
+            guard let url = URL(string: photourl) else { return }
+            photoAlbum.kf.indicatorType = .activity
+            photoAlbum.kf.setImage(with: url, placeholder: #imageLiteral(resourceName: "VirtualTourist_152"), options: [.transition(.fade(0.4))], progressBlock: nil) { result in
+                switch result{
+                case .success(let value):
+                    photo.image = value.image.jpegData(compressionQuality: 1) as Data?
+                    try? DataController.shared.viewContext.save()
+                    case .failure(let error):
+                    print("Job failed: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

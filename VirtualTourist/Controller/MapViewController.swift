@@ -18,6 +18,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
     let distansInMeters: Double = 10000
     var fetchResult: NSFetchedResultsController<Pin>!
     var pinArray = [Pin]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
@@ -51,7 +52,6 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
         @objc func longPressed(_ sender: UILongPressGestureRecognizer) {
             let location = sender.location(in: mapView)
             let center = mapView.convert(location, toCoordinateFrom: mapView)
-    //        let region = MKCoordinateRegion(center: center, latitudinalMeters: distansInMeters, longitudinalMeters: distansInMeters)
             let pin = MKPointAnnotation()
             pin.coordinate = center
             mapView.addAnnotation(pin)
@@ -68,7 +68,6 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
                     print("Can't save data")
                 }
             }
-    //        mapView.setRegion(region, animated: true)
         }
         
         func getCenterLocation(for map: MKMapView) -> CLLocation {
@@ -99,7 +98,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
                 let filterPin = pinArray.filter{$0.latitude == annotation.coordinate.latitude && $0.longitude == annotation.coordinate.longitude}
                 guard let pin = filterPin.first else { return }
                 photoVC.pin = pin
-               
+                photoVC.location = annotation.coordinate
                 
             }
         }
