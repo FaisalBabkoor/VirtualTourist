@@ -50,6 +50,7 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
         }
         
         @objc func longPressed(_ sender: UILongPressGestureRecognizer) {
+            guard sender.state == .began else { return }
             let location = sender.location(in: mapView)
             let center = mapView.convert(location, toCoordinateFrom: mapView)
             let pin = MKPointAnnotation()

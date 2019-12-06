@@ -66,32 +66,33 @@ class PhotoAlbumViewController: UIViewController, UIGestureRecognizerDelegate {
             try fetchResult.performFetch()
             if isEmpty {
                 fetchNewImage()
-            } else {
-                 fetchNewImage()
             }
         } catch {
             print("No Data")
         }
     }
     
-    func fetchNewImage() {
-        page += 1
-        //Load new data
-        loadNewImages()
-    }
+    
     
     @IBAction func newCollectionButtonWasPressed(_ sender: UIButton) {
         fetchNewImage()
     }
     
+    func fetchNewImage() {
+        page += 1
+        //Load new Images
+        loadNewImages()
+    }
+    
     func loadNewImages() {
-        if !isEmpty {
-            let photos = fetchResult.fetchedObjects!
-            for photo in photos {
-                DataController.shared.viewContext.delete(photo)
-            }
-            try? DataController.shared.viewContext.save()
-        }
+        // when I want to download new images I need to delete old Images that saved in Core Data and then download new one
+                if !isEmpty {
+                    let photos = fetchResult.fetchedObjects!
+                    for photo in photos {
+                        DataController.shared.viewContext.delete(photo)
+                    }
+                    try? DataController.shared.viewContext.save()
+                }
         
         API.shared.getImages(lat: location?.latitude ?? 0.0, lon: location?.longitude ?? 0.0, page: page) { (newImagesURL) in
             self.noImageLabel.isHidden = newImagesURL.count == 0 ? false : true
@@ -124,15 +125,15 @@ extension PhotoAlbumViewController: UICollectionViewDataSource, UICollectionView
         return fetchResult.sections?.count ?? 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
-       return fetchResult.sections?[section].numberOfObjects ?? 0
+        
+        return fetchResult.sections?[section].numberOfObjects ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-      guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.CellsIdentifier.photoCell, for: indexPath) as? PhotoAlbumViewCell else { return UICollectionViewCell() }
-                let photo = fetchResult.object(at: indexPath)
-                cell.configureCell(photo: photo)
-            return cell
+        guard  let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Identifiers.CellsIdentifier.photoCell, for: indexPath) as? PhotoAlbumViewCell else { return UICollectionViewCell() }
+        let photo = fetchResult.object(at: indexPath)
+        cell.configureCell(photo: photo)
+        return cell
         
     }
     
@@ -160,7 +161,7 @@ extension PhotoAlbumViewController: MKMapViewDelegate {
     }
 }
 extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
-
+    
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert, .delete:

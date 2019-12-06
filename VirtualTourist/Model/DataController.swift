@@ -14,7 +14,6 @@ class DataController {
     var viewContext: NSManagedObjectContext {
         return container.viewContext
     }
-    var backgorundContext: NSManagedObjectContext!
     private init() {
         container = NSPersistentContainer(name: "VirtualTourist")
     }
@@ -24,19 +23,10 @@ class DataController {
                      fatalError("Can't load data")
                  }
             self.atuoSave()
-            self.configureContext()
                  completionHandler?()
         }
     }
-    func configureContext() {
-        backgorundContext = container.newBackgroundContext()
-        
-        viewContext.automaticallyMergesChangesFromParent = true
-        backgorundContext.automaticallyMergesChangesFromParent = true
-        
-        viewContext.mergePolicy = NSMergePolicy.mergeByPropertyStoreTrump
-        backgorundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-    }
+
 }
 extension DataController {
     func atuoSave(timeInterval: TimeInterval = 30) {
