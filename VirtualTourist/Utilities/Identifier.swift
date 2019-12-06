@@ -9,17 +9,13 @@
 import Foundation
 struct Identifiers {
     struct PinIdentifier {
-       static let pinID = "pinID"
+        static let pinID = "pinID"
     }
     struct SegueIdentifier {
         static let toPhotoAlbumVC = "toPhotoAlbumVC"
     }
     
-    struct StoryboardID {
-        
-    }
-    
     struct CellsIdentifier {
-      static let photoCell = "photoCell"
+        static let photoCell = "photoCell"
     }
 }

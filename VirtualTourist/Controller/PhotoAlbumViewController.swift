@@ -32,7 +32,6 @@ class PhotoAlbumViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         fetch()
@@ -72,8 +71,6 @@ class PhotoAlbumViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    
-    
     @IBAction func newCollectionButtonWasPressed(_ sender: UIButton) {
         fetchNewImage()
     }
@@ -86,13 +83,13 @@ class PhotoAlbumViewController: UIViewController, UIGestureRecognizerDelegate {
     
     func loadNewImages() {
         // when I want to download new images I need to delete old Images that saved in Core Data and then download new one
-                if !isEmpty {
-                    let photos = fetchResult.fetchedObjects!
-                    for photo in photos {
-                        DataController.shared.viewContext.delete(photo)
-                    }
-                    try? DataController.shared.viewContext.save()
-                }
+        if !isEmpty {
+            let photos = fetchResult.fetchedObjects!
+            for photo in photos {
+                DataController.shared.viewContext.delete(photo)
+            }
+            try? DataController.shared.viewContext.save()
+        }
         
         API.shared.getImages(lat: location?.latitude ?? 0.0, lon: location?.longitude ?? 0.0, page: page) { (newImagesURL) in
             self.noImageLabel.isHidden = newImagesURL.count == 0 ? false : true
@@ -105,7 +102,6 @@ class PhotoAlbumViewController: UIViewController, UIGestureRecognizerDelegate {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
-            
         }
     }
     
@@ -117,15 +113,15 @@ class PhotoAlbumViewController: UIViewController, UIGestureRecognizerDelegate {
         mapView.setRegion(region, animated: true)
         mapView.addAnnotation(pointAnnotation)
     }
-    
-    
 }
+
+
 extension PhotoAlbumViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return fetchResult.sections?.count ?? 1
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         return fetchResult.sections?[section].numberOfObjects ?? 0
     }
     
@@ -134,7 +130,6 @@ extension PhotoAlbumViewController: UICollectionViewDataSource, UICollectionView
         let photo = fetchResult.object(at: indexPath)
         cell.configureCell(photo: photo)
         return cell
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -142,7 +137,6 @@ extension PhotoAlbumViewController: UICollectionViewDataSource, UICollectionView
         DataController.shared.viewContext.delete(photo)
         try? DataController.shared.viewContext.save()
     }
-    
 }
 
 extension PhotoAlbumViewController: MKMapViewDelegate {
@@ -160,6 +154,7 @@ extension PhotoAlbumViewController: MKMapViewDelegate {
         return pinView
     }
 }
+
 extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {

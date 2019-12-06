@@ -14,7 +14,5 @@ struct ShowAlert {
         DispatchQueue.main.async {
             vc.present(alertController, animated: true, completion: nil)
         }
-        
     }
-    
 }

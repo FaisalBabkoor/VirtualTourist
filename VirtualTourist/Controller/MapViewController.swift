@@ -11,7 +11,7 @@ import MapKit
 import CoreData
 
 class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
-
+    
     @IBOutlet var mapView: MKMapView!
     
     var choosenLocation: MKCoordinateRegion!
@@ -26,72 +26,67 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
         fetch()
         bringPins()
     }
+    
     func bringPins() {
         if let pins = fetchResult.fetchedObjects {
             pinArray = pins
-               for pin in pins {
-                   let center = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
-                   let pointAnnotation = MKPointAnnotation()
-                       pointAnnotation.coordinate = center
-                   
-                   mapView.addAnnotation(pointAnnotation)
-               }
-           }
-           
+            for pin in pins {
+                let center = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+                let pointAnnotation = MKPointAnnotation()
+                pointAnnotation.coordinate = center
+                
+                mapView.addAnnotation(pointAnnotation)
+            }
+        }
     }
+    
     func longPressGestureRecognizer() {
-            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
-            longPress.delegate = self
-            mapView.addGestureRecognizer(longPress)
-           
-                      
-            
-            
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
+        longPress.delegate = self
+        mapView.addGestureRecognizer(longPress)
+    }
+    
+    @objc func longPressed(_ sender: UILongPressGestureRecognizer) {
+        guard sender.state == .began else { return }
+        let location = sender.location(in: mapView)
+        let center = mapView.convert(location, toCoordinateFrom: mapView)
+        let pin = MKPointAnnotation()
+        pin.coordinate = center
+        mapView.addAnnotation(pin)
+        let newPin = Pin(context: DataController.shared.viewContext)
+        newPin.latitude = center.latitude
+        newPin.longitude = center.longitude
+        if !pinArray.contains(newPin){
+            pinArray.append(newPin)
         }
-        
-        @objc func longPressed(_ sender: UILongPressGestureRecognizer) {
-            guard sender.state == .began else { return }
-            let location = sender.location(in: mapView)
-            let center = mapView.convert(location, toCoordinateFrom: mapView)
-            let pin = MKPointAnnotation()
-            pin.coordinate = center
-            mapView.addAnnotation(pin)
-            let newPin = Pin(context: DataController.shared.viewContext)
-            newPin.latitude = center.latitude
-            newPin.longitude = center.longitude
-            if !pinArray.contains(newPin){
-                pinArray.append(newPin)
-            }
-            if DataController.shared.viewContext.hasChanges {
-                do {
-                    try DataController.shared.viewContext.save()
-                } catch {
-                    print("Can't save data")
-                }
+        if DataController.shared.viewContext.hasChanges {
+            do {
+                try DataController.shared.viewContext.save()
+            } catch {
+                print("Can't save data")
             }
         }
-        
-        func getCenterLocation(for map: MKMapView) -> CLLocation {
-            let longitude = mapView.centerCoordinate.longitude
-            let latitude = mapView.centerCoordinate.latitude
-            return CLLocation(latitude: latitude, longitude: longitude)
-            
-        }
+    }
+    
+    func getCenterLocation(for map: MKMapView) -> CLLocation {
+        let longitude = mapView.centerCoordinate.longitude
+        let latitude = mapView.centerCoordinate.latitude
+        return CLLocation(latitude: latitude, longitude: longitude)
+    }
     
     func fetch() {
-          let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-          let sortDescriptor = NSSortDescriptor(key: "longitude" , ascending: true)
-          fetchRequest.sortDescriptors = [sortDescriptor]
-          fetchResult = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DataController.shared.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-          fetchResult.delegate = self
-          do {
-              try fetchResult.performFetch()
-          } catch {
-              fatalError("he fetch could not be performed: \(error.localizedDescription) ")
-          }
-          
-          
-      }
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "longitude" , ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchResult = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DataController.shared.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResult.delegate = self
+        do {
+            try fetchResult.performFetch()
+        } catch {
+            fatalError("he fetch could not be performed: \(error.localizedDescription) ")
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Identifiers.SegueIdentifier.toPhotoAlbumVC {
             if let photoVC = segue.destination as? PhotoAlbumViewController {
@@ -104,9 +99,8 @@ class MapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetche
             }
         }
     }
-
-
 }
+
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard annotation is MKPinAnnotationView else { return nil }
@@ -121,6 +115,7 @@ extension MapViewController: MKMapViewDelegate {
         }
         return pinView
     }
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         performSegue(withIdentifier: Identifiers.SegueIdentifier.toPhotoAlbumVC, sender: view.annotation)
     }
